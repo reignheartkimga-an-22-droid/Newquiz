@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NI ✿ Education &amp; Research Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#4263d8;
+    --blue-soft:#d6deff;
+    --orange:#ff8a4c;
+    --orange-soft:#ffe0cf;
+    --yellow:#ffcb45;
+    --yellow-soft:#fff0c2;
+    --pink:#ff7eb6;
+    --cream:#fffdf7;
+    --ink:#3a3f63;
+    --ink-soft:#8a8fb0;
+    --green:#28b485;
+    --red:#ff6b7a;
+    --shadow:rgba(66,99,216,.28);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Nunito',sans-serif;
+    background:
+      radial-gradient(circle at 10% 12%, #ffe0cf 0, transparent 38%),
+      radial-gradient(circle at 90% 10%, #fff0c2 0, transparent 36%),
+      radial-gradient(circle at 85% 88%, #d6deff 0, transparent 42%),
+      radial-gradient(circle at 12% 90%, #ffd9ec 0, transparent 38%),
+      var(--cream);
+    min-height:100vh;color:var(--ink);
+    padding:24px 14px 60px;-webkit-tap-highlight-color:transparent;
+  }
+  .wrap{max-width:640px;margin:0 auto;position:relative;z-index:1;}
+
+  .topcard{
+    background:#fff;border:3px solid var(--blue-soft);border-radius:30px;
+    padding:24px 22px 20px;text-align:center;
+    box-shadow:0 14px 0 -4px var(--shadow),0 22px 40px -18px var(--shadow);
+    position:relative;overflow:hidden;
+  }
+  .topcard::after{content:"📚✨💻";position:absolute;top:10px;right:14px;font-size:15px;opacity:.6;}
+  h1{font-family:'Fredoka';font-weight:700;font-size:clamp(24px,6.5vw,36px);line-height:1.05;
+     color:var(--blue);text-shadow:2px 2px 0 #fff,4px 4px 0 var(--blue-soft);}
+  .sub{font-weight:700;color:var(--orange);margin-top:8px;font-size:14px;}
+  .vibe{font-weight:700;color:var(--ink-soft);font-size:12px;margin-top:3px;}
+  .badges{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:14px;}
+  .badge{font-family:'Fredoka';font-weight:600;font-size:11px;padding:5px 11px;border-radius:18px;color:#fff;}
+  .b1{background:var(--blue);}.b2{background:var(--orange);}.b3{background:var(--green);}.b4{background:var(--pink);}.b5{background:var(--yellow);color:#7a5a00;}
+
+  .progress-shell{margin:18px auto 14px;}
+  .pbar-bg{height:18px;background:#fff;border:3px solid var(--blue-soft);border-radius:30px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,.05);}
+  .pbar-fill{height:100%;width:0;border-radius:30px;background:linear-gradient(90deg,var(--orange),var(--yellow),var(--green),var(--blue));transition:width .45s cubic-bezier(.34,1.56,.64,1);}
+  .pmeta{display:flex;justify-content:space-between;font-weight:800;font-size:13px;color:var(--ink-soft);margin-top:8px;padding:0 4px;}
+  .pmeta .score{color:var(--green);}
+  .streak{color:var(--orange);}
+
+  .card{
+    background:#fff;border:3px solid var(--blue-soft);border-radius:26px;
+    padding:22px 20px 24px;margin-top:14px;
+    box-shadow:0 12px 0 -4px var(--shadow),0 22px 40px -22px var(--shadow);
+    animation:pop .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes pop{0%{transform:scale(.94) translateY(10px);opacity:0;}100%{transform:scale(1) translateY(0);opacity:1;}}
+  .qtop{display:flex;align-items:center;gap:9px;margin-bottom:13px;flex-wrap:wrap;}
+  .qnum{font-family:'Fredoka';font-weight:700;font-size:14px;color:#fff;background:var(--blue);padding:5px 13px;border-radius:16px;}
+  .qchap{font-weight:800;font-size:10.5px;color:var(--blue);background:var(--blue-soft);padding:5px 10px;border-radius:14px;}
+  .qtext{font-family:'Fredoka';font-weight:600;font-size:18.5px;line-height:1.35;color:var(--ink);margin-bottom:17px;}
+
+  .opts{display:flex;flex-direction:column;gap:10px;}
+  .opt{display:flex;align-items:center;gap:11px;background:var(--cream);border:3px solid var(--blue-soft);
+    border-radius:16px;padding:12px 14px;cursor:pointer;font-weight:700;font-size:15px;color:var(--ink);
+    transition:transform .15s,border-color .15s,background .15s;text-align:left;}
+  .opt:hover{transform:translateY(-2px);border-color:var(--blue);background:#fff;}
+  .opt .letter{flex:none;width:29px;height:29px;border-radius:50%;display:grid;place-items:center;
+    font-family:'Fredoka';font-weight:700;background:#fff;border:2px solid var(--blue);color:var(--blue);font-size:13px;}
+  .opt.correct{border-color:var(--green);background:#dffaef;}
+  .opt.correct .letter{background:var(--green);border-color:var(--green);color:#fff;}
+  .opt.wrong{border-color:var(--red);background:#ffe5e8;}
+  .opt.wrong .letter{background:var(--red);border-color:var(--red);color:#fff;}
+  .opt.locked{cursor:default;pointer-events:none;}
+  .opt.dim{opacity:.45;}
+
+  .reaction{margin-top:16px;border-radius:16px;padding:14px 16px;font-weight:800;font-size:15px;display:none;animation:wob .5s ease;}
+  .reaction.show{display:block;}
+  .reaction .bigmoji{font-size:36px;display:block;animation:spin 1.2s ease-in-out infinite;}
+  @keyframes spin{0%,100%{transform:rotate(-8deg) scale(1);}50%{transform:rotate(8deg) scale(1.18);}}
+  @keyframes wob{0%{transform:scale(.8);}60%{transform:scale(1.05);}100%{transform:scale(1);}}
+  .reaction.yay{background:#dffaef;color:var(--green);border:3px dashed var(--green);}
+  .reaction.nay{background:#ffe5e8;color:var(--red);border:3px dashed var(--red);}
+  .reaction .ans{display:block;margin-top:6px;font-weight:700;font-size:13.5px;color:var(--ink);}
+
+  .next-btn{margin-top:16px;width:100%;border:none;cursor:pointer;font-family:'Fredoka';font-weight:700;
+    font-size:18px;color:#fff;background:var(--orange);padding:14px;border-radius:18px;
+    box-shadow:0 6px 0 #e0703a;transition:transform .12s,box-shadow .12s;display:none;}
+  .next-btn.show{display:block;animation:pop .3s ease;}
+  .next-btn:active{transform:translateY(4px);box-shadow:0 2px 0 #e0703a;}
+
+  .result{display:none;text-align:center;}
+  .result.show{display:block;animation:pop .5s cubic-bezier(.34,1.56,.64,1);}
+  .result .emoji{font-size:74px;line-height:1;animation:bounce 1.3s ease-in-out infinite;}
+  @keyframes bounce{0%,100%{transform:translateY(0) rotate(-4deg);}50%{transform:translateY(-14px) rotate(4deg);}}
+  .result h2{font-family:'Fredoka';font-size:30px;color:var(--blue);margin:10px 0 2px;text-shadow:2px 2px 0 var(--blue-soft);}
+  .scorebig{font-family:'Fredoka';font-weight:700;font-size:54px;color:var(--orange);margin:6px 0;}
+  .result p{font-weight:700;color:var(--ink-soft);font-size:16px;margin-bottom:6px;padding:0 10px;}
+  .restart{margin-top:22px;border:none;cursor:pointer;font-family:'Fredoka';font-weight:700;font-size:18px;color:#fff;
+    background:var(--green);padding:14px 32px;border-radius:20px;box-shadow:0 6px 0 #1f9670;transition:transform .12s,box-shadow .12s;}
+  .restart:active{transform:translateY(4px);box-shadow:0 2px 0 #1f9670;}
+
+  .footer{text-align:center;margin-top:26px;font-size:12px;font-weight:700;color:var(--ink-soft);opacity:.8;}
+  .floaty{position:fixed;font-size:22px;pointer-events:none;opacity:.5;animation:float 9s ease-in-out infinite;z-index:0;}
+  @keyframes float{0%,100%{transform:translateY(0) rotate(0);}50%{transform:translateY(-22px) rotate(12deg);}}
+</style>
+</head>
+<body>
+  <span class="floaty" style="top:9%;left:5%;">🤓</span>
+  <span class="floaty" style="top:22%;right:6%;animation-delay:1.4s;">💀</span>
+  <span class="floaty" style="bottom:16%;left:7%;animation-delay:2.8s;">🔥</span>
+  <span class="floaty" style="bottom:30%;right:7%;animation-delay:2s;">✨</span>
+
+  <div class="wrap">
+    <div class="topcard">
+      <h1>Nursing Informatics</h1>
+      <div class="sub">✿ Education &amp; Research ✿ 60 Questions ✿</div>
+      <div class="vibe">the finals reviewer but make it ✨ unserious ✨</div>
+      <div class="badges">
+        <span class="badge b1">Industry 4.0</span>
+        <span class="badge b2">AI &amp; IoT</span>
+        <span class="badge b3">Research Tools</span>
+        <span class="badge b4">Databases</span>
+        <span class="badge b5">HTI</span>
+      </div>
+    </div>
+
+    <div class="progress-shell" id="progressShell">
+      <div class="pbar-bg"><div class="pbar-fill" id="pbar"></div></div>
+      <div class="pmeta">
+        <span id="pcount">Question 1 of 60</span>
+        <span><span class="streak" id="pstreak"></span> <span class="score">⭐ <span id="pscore">0</span></span></span>
+      </div>
+    </div>
+
+    <div id="quizArea"></div>
+
+    <div class="result" id="result">
+      <div class="emoji" id="resEmoji">🎉</div>
+      <h2 id="resTitle">Quiz cleared!</h2>
+      <div class="scorebig"><span id="resScore">0</span>/60</div>
+      <p id="resMsg"></p>
+      <p id="resPct"></p>
+      <button class="restart" onclick="restart()">↺ Run it back</button>
+    </div>
+
+    <div class="footer">made with 💙 for the girlies & gworls · based on Pendon-Valebia, SPU Iloilo</div>
+  </div>
+
+<script>
+const QUESTIONS = [
+  // ===== INDUSTRIAL REVOLUTIONS / EDUCATION 4.0 =====
+  {c:"Industry 4.0", q:"The First Industrial Revolution mechanized production using:", o:["Steam and water power","Electric power","Computers","AI and IoT"], a:0},
+  {c:"Industry 4.0", q:"The Second Industrial Revolution (1870–1914) used what to create mass production?", o:["Electric power","Steam power","The internet","Robots"], a:0},
+  {c:"Industry 4.0", q:"The Third Industrial Revolution used what to automate production?", o:["Electronics and information technology","Water wheels","Smart cells","Cobots"], a:0},
+  {c:"Industry 4.0", q:"The Fourth Industrial Revolution (2011) is characterized by:", o:["Smart tech, machine-to-machine communication, and IoT","Steam engines","Hand tools","Telegraphs"], a:0},
+  {c:"Industry 4.0", q:"Education 4.0 aligns learning with which revolution?", o:["The Fourth Industrial Revolution","The First","The Second","None"], a:0},
+  {c:"Industry 4.0", q:"Education 4.0 focuses on smart technology, artificial intelligence, and:", o:["Robotics","Chalkboards","Typewriters","Steam"], a:0},
+  {c:"Industry 4.0", q:"The Fifth Industrial Revolution (2020s) adds concepts like sustainability and:", o:["Human-centeredness and concern for the environment","Mass production only","Steam power","Removing all humans"], a:0},
+  {c:"Industry 4.0", q:"AI is projected to disrupt entire industries, with many jobs replaced by:", o:["Robots or algorithms that automate processes","More nurses","Paper forms","Steam engines"], a:0},
+
+  // ===== AI / ML / TECHNIQUES =====
+  {c:"AI & IoT", q:"Artificial Intelligence refers to computer systems performing tasks that require:", o:["Human intelligence","Only electricity","Manual labor","No data"], a:0},
+  {c:"AI & IoT", q:"AI aids in processing data, identifying patterns, and:", o:["Making decisions based on collected information","Deleting all records","Replacing nurses entirely","Charging money"], a:0},
+  {c:"AI & IoT", q:"Which is NOT listed as a technique used to achieve AI?", o:["Telepathy","Machine Learning","Natural Language Processing","Computer Vision"], a:0},
+  {c:"AI & IoT", q:"Siri, Google Assistant, and Amazon Alexa are examples of:", o:["Virtual Personal Assistants","Autonomous vehicles","Fraud detectors","Cobots"], a:0},
+  {c:"AI & IoT", q:"Virtual personal assistants improve accuracy over time using NLP and:", o:["Machine learning algorithms","Steam power","Manual updates only","Random guessing"], a:0},
+  {c:"AI & IoT", q:"Tesla, Waymo, and Uber are at the forefront of which AI application?", o:["Autonomous Vehicles","Recommendation systems","Fraud detection","Virtual assistants"], a:0},
+  {c:"AI & IoT", q:"IBM's Watson for Health and Google's DeepMind are AI platforms used in:", o:["Healthcare diagnosis and treatment","Music streaming","Driving cars","Banking only"], a:0},
+  {c:"AI & IoT", q:"Netflix, Amazon, and Spotify use AI mainly for:", o:["Recommendation systems","Self-driving cars","Surgery","Fraud detection"], a:0},
+  {c:"AI & IoT", q:"Recommendation systems use collaborative filtering and:", o:["Content-based filtering","Steam engines","Manual sorting","Random selection"], a:0},
+  {c:"AI & IoT", q:"Financial institutions use AI algorithms in real-time for:", o:["Fraud detection","Recommendation systems","Driving cars","Virtual assistants"], a:0},
+
+  // ===== IoT / COBOTS / SMART CELL =====
+  {c:"AI & IoT", q:"The Internet of Things (IoT) refers to a network of physical devices embedded with:", o:["Sensors, software, and network connectivity","Only batteries","Steam pipes","Paper labels"], a:0},
+  {c:"AI & IoT", q:"IoT devices are able to:", o:["Collect and share data","Only make phone calls","Print documents only","Generate electricity"], a:0},
+  {c:"AI & IoT", q:"Industrial robots that work in the same space as humans without barriers are called:", o:["Collaborative Robots (Cobots)","Smart cells","Drones","Mainframes"], a:0},
+  {c:"AI & IoT", q:"To detect the proximity of people, cobots are equipped with:", o:["Ultrasonic sensors on robot arms","Steam valves","Paper sensors","Nothing"], a:0},
+  {c:"AI & IoT", q:"Which sensor in a cobot detects its operating speed?", o:["Accelerometers","Gyro sensors","Ultrasonic sensors","Thermometers"], a:0},
+  {c:"AI & IoT", q:"Gyro sensors in cobots measure the:", o:["Inclination with high precision","Temperature","Heart rate","Sound level"], a:0},
+  {c:"AI & IoT", q:"A 'smart cell' maximizes the material production capacity of a biological cell using:", o:["Biotechnology and digital technologies","Steam power","Manual labor","Paper records"], a:0},
+
+  // ===== NURSING RESEARCH / BIBLIOGRAPHIC MGMT =====
+  {c:"Research Tools", q:"Bibliographic (reference) management tools help with all EXCEPT:", o:["Performing surgery","Collecting and saving resource details","Storing and organizing references","Generating citations"], a:0},
+  {c:"Research Tools", q:"Which is described as the standard reference management software across universities?", o:["EndNote","Zotero","Paperpile","Mendeley"], a:0},
+  {c:"Research Tools", q:"Which reference manager is popular for collaboration and offers up to 2GB free storage?", o:["Mendeley","EndNote","Zotero","Paperpile"], a:0},
+  {c:"Research Tools", q:"Which reference management software is free and open-source?", o:["Zotero","EndNote","Paperpile","Scopus"], a:0},
+  {c:"Research Tools", q:"Which popular reference tool comes at a monthly cost?", o:["Paperpile","Zotero","Mendeley (free edition)","Google Scholar"], a:0},
+
+  // ===== INFORMATION LITERACY =====
+  {c:"Info Literacy", q:"Standards organizations insist that nursing care be based on:", o:["Information derived from best practice evidence","Tradition only","Guessing","Personal opinion"], a:0},
+  {c:"Info Literacy", q:"Which is the FIRST step of the information literacy process?", o:["Recognize the need for evidence","Publish a paper","Bill the patient","Delete records"], a:0},
+  {c:"Info Literacy", q:"An information literate person can recognize when info is needed and can:", o:["Locate, evaluate, and use it effectively","Ignore it","Only memorize it","Sell it"], a:0},
+  {c:"Info Literacy", q:"Information literacy is considered a competency of a:", o:["Basic nurse (ANA, 2008)","Surgeon only","Pharmacist only","Lawyer"], a:0},
+  {c:"Info Literacy", q:"When evaluating a resource, nurses must consider both:", o:["Quantity and quality","Color and font","Price and brand","Length and weight"], a:0},
+
+  // ===== BIBLIOGRAPHIC RETRIEVAL SYSTEMS =====
+  {c:"Databases", q:"The best way to peruse the literature is through a:", o:["Bibliographic retrieval system","Phone call","Newspaper","Group chat"], a:0},
+  {c:"Databases", q:"MEDLINE/PubMed covers about 5600 journals in how many languages?", o:["39","5","100","12"], a:0},
+  {c:"Databases", q:"PubMed contains references from what year to the present?", o:["1946","1880","1982","2011"], a:0},
+  {c:"Databases", q:"CINAHL provides comprehensive coverage of literature in:", o:["Nursing and allied health","Astronomy","Law","Engineering"], a:0},
+  {c:"Databases", q:"CINAHL is a database produced by a division of:", o:["EBSCO Information Services","Google","Apple","WHO"], a:0},
+  {c:"Databases", q:"Mosby's Index uses which thesaurus?", o:["EMTREE Thesaurus","MeSH","Eric Descriptors","Psychological Index Terms"], a:0},
+  {c:"Databases", q:"ERIC focuses on which type of literature?", o:["Education-related","Psychology only","Surgery","Astronomy"], a:0},
+  {c:"Databases", q:"PsycINFO is produced by the:", o:["American Psychological Association","WHO","Elsevier","NIH"], a:0},
+  {c:"Databases", q:"Which database is free to access and offers broad search across many disciplines?", o:["Google Scholar","Scopus","Embase","Web of Science"], a:0},
+  {c:"Databases", q:"Scopus is a large research database covering how many disciplines?", o:["240","39","17","5"], a:0},
+  {c:"Databases", q:"Embase has a special focus on:", o:["Pharmaceutical and medical device research","Education","Law","Astronomy"], a:0},
+  {c:"Databases", q:"The WHO Global Index Medicus lets you search within:", o:["Low-middle income countries","Only the US","Only Europe","Only hospitals"], a:0},
+  {c:"Databases", q:"The Cochrane Library is known as the Cochrane Central Register of:", o:["Controlled Trials","Patient Names","Hospitals","Medications"], a:0},
+  {c:"Databases", q:"ClinicalTrials.gov is an online database of:", o:["Clinical research studies and their results","Movies","Recipes","Patents"], a:0},
+
+  // ===== OTHER SERVICES =====
+  {c:"Databases", q:"Services that provide tables of contents of journals are called:", o:["Current Awareness Services","Point-of-care tools","Review services","Search tags"], a:0},
+  {c:"Databases", q:"Joanna Briggs Institute and Cochrane Library are examples of:", o:["Review Services","Point-of-care tools","Survey tools","Reference managers"], a:0},
+  {c:"Databases", q:"Resources that support patient care at the bedside are:", o:["Point-of-Care Resources","Review services","Reference managers","Survey tools"], a:0},
+
+  // ===== SEARCH FIELD TAGS / DATA TOOLS =====
+  {c:"Databases", q:"In PubMed, a search field tag must be enclosed in:", o:["Square brackets","Parentheses","Quotation marks","Curly braces"], a:0},
+  {c:"Databases", q:"Search field tags turn OFF automatic term mapping, which:", o:["Limits the search to the specified term only","Expands the search","Deletes results","Adds random terms"], a:0},
+  {c:"Research Tools", q:"Which tools are used for quantitative analysis in nursing research?", o:["SPSS, Nvivo","Photoshop","Spotify","Canva"], a:0},
+  {c:"Research Tools", q:"Which tools are mentioned for qualitative analysis?", o:["ATLAS, Nvivo","Excel only","Siri","Alexa"], a:0},
+  {c:"Research Tools", q:"Translational informatics uses bioinformatics and statistical approaches to interpret data into:", o:["Useful insights","Steam","Random noise","Paper only"], a:0},
+
+  // ===== HUMAN-TECHNOLOGY INTERFACE =====
+  {c:"HTI", q:"The Human-Technology Interface (HTI) is defined as:", o:["The hardware and software through which a user interacts with technology","Only the keyboard","Only the patient","A type of medication"], a:0},
+  {c:"HTI", q:"Human-Computer Interaction (HCI) studies the interaction between:", o:["People (users) and computers","Two computers","Two nurses","Robots only"], a:0},
+  {c:"HTI", q:"Human-technology interface problems are the major cause of up to what % of patient monitoring incidents?", o:["87%","10%","50%","100%"], a:0},
+  {c:"HTI", q:"An interface is described as 'transparent' when it is:", o:["So easy to use that users only think about the task at hand","Invisible to the eye","Made of glass","Very colorful"], a:0},
+  {c:"HTI", q:"Usability denotes the ease with which people can use an interface to:", o:["Achieve a particular goal","Break it","Sell it","Hide it"], a:0},
+  {c:"HTI", q:"Improved human-technology interface design dramatically reduced deaths in which area?", o:["Anesthesiology","Dentistry","Radiology","Pediatrics"], a:0}
+];
+
+let idx=0, score=0, streak=0, answered=false;
+const quizArea=document.getElementById('quizArea');
+const pbar=document.getElementById('pbar');
+const pcount=document.getElementById('pcount');
+const pscore=document.getElementById('pscore');
+const pstreak=document.getElementById('pstreak');
+const LETTERS=['A','B','C','D'];
+
+const WIN_REACTS=[
+  {e:'🔥',t:'W rizz! Correct, no cap.'},
+  {e:'💅',t:"That's giving main character energy. Correct!"},
+  {e:'😎',t:'Ate that up. Slay.'},
+  {e:'🧠',t:'Big brain moment. Correct!'},
+  {e:'✨',t:"It's giving... CORRECT bestie."},
+  {e:'6️⃣',t:'6 7?? nah you cooked. Correct!'},
+  {e:'🤓',t:'Actually correct. Sigma move.'},
+  {e:'💯',t:'Periodt. Nailed it.'},
+  {e:'🏆',t:'Certified W. Keep going!'},
+  {e:'😤',t:'No because that was PERFECT.'}
+];
+const LOSE_REACTS=[
+  {e:'💀',t:'Bro that was an L... but we move.'},
+  {e:'😭',t:"It's so over... (jk, learn it & continue)"},
+  {e:'🤡',t:'Caught in 4k. Wrong one bestie.'},
+  {e:'🫠',t:'Delulu was not the solulu this time.'},
+  {e:'😬',t:'That answer was mid. Here\u2019s the real one:'},
+  {e:'📉',t:'Stocks down. Wrong answer, fr fr.'},
+  {e:'🥲',t:'Not the vibe... but you got this next one.'},
+  {e:'💔',t:'Heartbreak. The correct answer was:'}
+];
+
+function render(){
+  const Q=QUESTIONS[idx];
+  answered=false;
+  pbar.style.width=((idx)/QUESTIONS.length*100)+'%';
+  pcount.textContent=`Question ${idx+1} of ${QUESTIONS.length}`;
+  pscore.textContent=score;
+  pstreak.textContent = streak>=3 ? `🔥${streak} streak!` : '';
+
+  let opts='';
+  Q.o.forEach((t,i)=>{
+    opts+=`<button class="opt" data-i="${i}" onclick="choose(${i})">
+      <span class="letter">${LETTERS[i]}</span><span>${t}</span></button>`;
+  });
+
+  quizArea.innerHTML=`
+    <div class="card">
+      <div class="qtop"><span class="qnum">Q${idx+1}</span><span class="qchap">${Q.c}</span></div>
+      <div class="qtext">${Q.q}</div>
+      <div class="opts" id="opts">${opts}</div>
+      <div class="reaction" id="reaction"></div>
+      <button class="next-btn" id="nextBtn" onclick="next()">
+        ${idx===QUESTIONS.length-1?'Reveal my final score 🎀':'Next →'}
+      </button>
+    </div>`;
+}
+
+function choose(i){
+  if(answered) return;
+  answered=true;
+  const Q=QUESTIONS[idx];
+  const opts=document.querySelectorAll('.opt');
+  const rx=document.getElementById('reaction');
+  opts.forEach((el,j)=>{
+    el.classList.add('locked');
+    if(j===Q.a) el.classList.add('correct');
+    else if(j===i) el.classList.add('wrong');
+    else el.classList.add('dim');
+  });
+  if(i===Q.a){
+    score++; streak++;
+    pscore.textContent=score;
+    const r=pick(WIN_REACTS);
+    rx.className='reaction yay show';
+    rx.innerHTML=`<span class="bigmoji">${r.e}</span>${r.t}`;
+  }else{
+    streak=0;
+    const r=pick(LOSE_REACTS);
+    rx.className='reaction nay show';
+    rx.innerHTML=`<span class="bigmoji">${r.e}</span>${r.t}
+      <span class="ans">✅ ${LETTERS[Q.a]}. ${Q.o[Q.a]}</span>`;
+  }
+  pstreak.textContent = streak>=3 ? `🔥${streak} streak!` : '';
+  document.getElementById('nextBtn').classList.add('show');
+}
+
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+
+function next(){
+  if(idx<QUESTIONS.length-1){ idx++; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+  else showResult();
+}
+
+function showResult(){
+  document.getElementById('progressShell').style.display='none';
+  quizArea.innerHTML='';
+  pbar.style.width='100%';
+  const res=document.getElementById('result');
+  res.classList.add('show');
+  document.getElementById('resScore').textContent=score;
+  const pct=Math.round(score/QUESTIONS.length*100);
+  document.getElementById('resPct').textContent=`${pct}% — that's your final boss score.`;
+  let emoji,title,msg;
+  if(pct>=90){emoji='👑';title='Absolute W';msg='You ATE and left no crumbs. Certified informatics icon. 💅🔥';}
+  else if(pct>=75){emoji='🔥';title='Lowkey cooked';msg='Big brain energy fr. A lil polish and you\u2019re unstoppable, no cap.';}
+  else if(pct>=50){emoji='✨';title='Not bad bestie';msg='Mid-to-solid run. Review the Ls and you\u2019ll be cooking next time.';}
+  else{emoji='🫡';title='We move';msg='Took a few Ls today but it\u2019s NOT over. Run it back, you got this fr. 💪';}
+  document.getElementById('resEmoji').textContent=emoji;
+  document.getElementById('resTitle').textContent=title;
+  document.getElementById('resMsg').textContent=msg;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function restart(){
+  idx=0;score=0;streak=0;answered=false;
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('progressShell').style.display='block';
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+render();
+</script>
+</body>
+</html>
